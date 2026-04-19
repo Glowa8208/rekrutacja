@@ -22,13 +22,23 @@ TEST AUTOMATYCZNY WERYFIKACJI CIASTECZEK COOKIE + ANALITYCZNE NA STORNIE ING.PL
 
 # POBRANIE/INSTALACJA TESTU AUTOMATYCZNEGO
 1. KLONOWANIE REPOZYTORIUM 
+```
 git clone
+```
 2. POWOŁANIE ŚRODOWISKA WIRTUALNEGO PYTHON
+```
 python -m venv venv
 source venv/bin/activate
+```
 3. INSTALACJA ZAELŻNOŚCI
+```
 pip install -r requirements.txt
+```
 4. INSTALACJA PLAYWRIGHT'A
+```
 playwright install
+```
 5. URUCHOMIENIE TESTU
+```
 python test.rekrutacja.py
+```
