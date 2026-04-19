@@ -1,5 +1,5 @@
 # TEST AUTOMATYCZNY COOKIES
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright
 import time
 ING_URL = "http://www.ing.pl/"
 
@@ -19,15 +19,15 @@ def test_cookie(przegladarka):
         page = context.new_page()
 
         # 1. WEJŚCIE NA STRONE ING 
-        page.goto("http://www.ing.pl/")
-        time.sleep(1)  #oczekiwanie na zaladowanie storny
+        page.goto(ING_URL)
+        time.sleep(1)  #oczekiwanie 1 sek 
 
         # 2. KLIKAM PRZYCISK [DOSTOSUJ]
         page.get_by_role("button", name="Dostosuj").click()
         time.sleep(1)
 
         # 3. ZAZNACZENIE OPCJI COOKIE ANALITYCZNE
-        page.get_by_role("switch", name="Cookies analityczne").locator("span").first.click() 
+        page.get_by_role("switch", name="Cookies analityczne").click()
         time.sleep(1)
 
         #4. KLIKAM ZAAKCEPTUJ ZAZNACZONE
@@ -57,7 +57,7 @@ def test_cookie(przegladarka):
         
         #WERYFIKACJA POPRAWNOŚI [1 zgoda na analityczne]
         if 'value' not in policy_cookie or policy_cookie["value"]!= "3":
-            print(f"Nieporawna wartosc ciasteczka. Oczekiwane 1, otrzymano {policy_cookie.get('value') or 'BEZ WARTOŚCI'}")
+            print(f"Nieporawna wartosc ciasteczka. Oczekiwane 3, otrzymano {policy_cookie.get('value') or 'BEZ WARTOŚCI'}")
             browser.close()
             return False
         
@@ -66,6 +66,11 @@ def test_cookie(przegladarka):
         for cookie in cookies:
             if 'name' in cookie and (cookie["name"].startswith("_ga") or cookie["name"].startswith("AMCV") or cookie["name"] =="s_cc"):
                 analytics_cookies.append(cookie)
+
+        if len(analytics_cookies) == 0:
+            print(f'Nie znaleziono ciasteczek analitycznych pomimo wyrazenia na nie zgody!')
+            browser.close()
+            return False
 
         print("Testy pozytywne - ciasteczka poprawne!")
         browser.close()
@@ -77,7 +82,11 @@ if __name__=="__main__":
     przegladarki = ['chromium', 'firefox']
 
     for przegladarka in przegladarki:
-        wynik = test_cookie(przegladarka)
+        try:
+            wynik = test_cookie(przegladarka)
+        except:
+            wynik = False
+            
         if wynik:
             print(f"{przegladarka}: OK")
         else:
