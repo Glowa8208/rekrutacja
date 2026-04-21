@@ -32,10 +32,11 @@ def test_cookie(przegladarka):
 
         #4. KLIKAM ZAAKCEPTUJ ZAZNACZONE
         page.get_by_role("button", name="Zaakceptuj zaznaczone").click()
-        time.sleep(1)
+        time.sleep(2)
 
         #5 WERYFIKACJA CZY CIASTECZKA ZOSTAŁY ZAPISANE
         page.get_by_role("link", name="Wholesale Banking").click() 
+        time.sleep(1)
         
         # WEJŚCIE NA PODSTRONE I WERYFIKACJA ZAPISU CIASTECZEK
         cookies = context.cookies() #weryfikacja w pamiecie przegladarki
@@ -55,7 +56,7 @@ def test_cookie(przegladarka):
         
         print(f"Znaleziono cookiePolicyGDPR z wartoscia: {policy_cookie.get('value') or 'BEZ WARTOŚCI'}")
         
-        #WERYFIKACJA POPRAWNOŚI [1 zgoda na analityczne]
+        #WERYFIKACJA POPRAWNOŚI [3 zgoda na analityczne]
         if 'value' not in policy_cookie or policy_cookie["value"]!= "3":
             print(f"Nieporawna wartosc ciasteczka. Oczekiwane 3, otrzymano {policy_cookie.get('value') or 'BEZ WARTOŚCI'}")
             browser.close()
@@ -86,7 +87,7 @@ if __name__=="__main__":
             wynik = test_cookie(przegladarka)
         except:
             wynik = False
-            
+
         if wynik:
             print(f"{przegladarka}: OK")
         else:
